@@ -1,0 +1,8 @@
+.dropdown-menu-right {
+  right: 0 !important;
+}
+
+.dropdown-menu {
+  top: auto;
+  margin-top: 0px !important;
+}
