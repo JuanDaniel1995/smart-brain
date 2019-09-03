@@ -45,6 +45,26 @@ class App extends Component {
     this.state = initialState;
   }
 
+  componentDidMount() {
+    const token = window.sessionStorage.getItem('token');
+    if (token) {
+      fetch('http://localhost:3000/signin', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        if (data && data.id) {
+          console.log('success');
+        }
+      })
+      .catch(console.log)
+    }
+  }
+
   loadUser = (data) => {
     this.setState({user: {
       id: data.id,
@@ -126,7 +146,7 @@ class App extends Component {
   }
 
   render() {
-    const { isSignedIn, imageUrl, route, boxes, isProfileOpen } = this.state;
+    const { isSignedIn, imageUrl, route, boxes, isProfileOpen, user } = this.state;
     return (
       <div className="App">
          <Particles className='particles'
@@ -136,7 +156,11 @@ class App extends Component {
         toggleModal={this.toggleModal} />
         { isProfileOpen &&
           <Modal>
-            <Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} />
+            <Profile
+            isProfileOpen={isProfileOpen}
+            toggleModal={this.toggleModal}
+            loadUser={this.loadUser}
+            user={user} />
           </Modal>
         }
         { route === 'home'
